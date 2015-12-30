@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>《征服C指针》阅读笔记 | One Punch Man</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="缘由上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《征服C指针》阅读笔记">
+<meta property="og:url" content="http://mmmmmax.com/2015/12/28/《征服C指针》阅读笔记/index.html">
+<meta property="og:site_name" content="One Punch Man">
+<meta property="og:description" content="缘由上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太">
+<meta property="og:updated_time" content="2015-12-29T05:49:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《征服C指针》阅读笔记">
+<meta name="twitter:description" content="缘由上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太">
+  
+    <link rel="alternative" href="/atom.xml" title="One Punch Man" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Max Wang</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/C语言/" style="font-size: 10px;">C语言</a> <a href="/tags/VFL/" style="font-size: 10px;">VFL</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/qrcode/" style="font-size: 10px;">qrcode</a> <a href="/tags/指针/" style="font-size: 10px;">指针</a> <a href="/tags/翻译/" style="font-size: 10px;">翻译</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Max Wang</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/img/avatar.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Max Wang</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-《征服C指针》阅读笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/28/《征服C指针》阅读笔记/" class="article-date">
+      <time datetime="2015-12-28T06:42:11.000Z" itemprop="datePublished">2015-12-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      《征服C指针》阅读笔记
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C语言/">C语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/指针/">指针</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h4 id="u7F18_u7531"><a href="#u7F18_u7531" class="headerlink" title="缘由"></a>缘由</h4><p>上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太重，不能耐下心来去看这种既不能提高绩点，又不能和当时实习挂钩的书（当年实习的大型机真是荒废了半年多的时光啊）。想那么多，不如现在就开始做，这篇读书笔记一是为了分享，也是为了督促自己。目测会有好几篇。那就开始吧！</p>
+<h3 id="u7B2C_u4E00_u7AE0__u4ECE_u57FA_u7840_u5F00_u59CB"><a href="#u7B2C_u4E00_u7AE0__u4ECE_u57FA_u7840_u5F00_u59CB" class="headerlink" title="第一章 从基础开始"></a>第一章 从基础开始</h3><h4 id="1-1__u4EC0_u4E48_u662FC"><a href="#1-1__u4EC0_u4E48_u662FC" class="headerlink" title="1.1 什么是C"></a>1.1 什么是C</h4><p>这一节主要介绍了c的由来，我以前一直以为<strong>sizeof</strong>只是一个函数，没想到竟然是关键字。太菜了，惭愧惭愧。</p>
+<h4 id="1-2__u5173_u4E8E_u6307_u9488"><a href="#1-2__u5173_u4E8E_u6307_u9488" class="headerlink" title="1.2 关于指针"></a>1.2 关于指针</h4><p>不得不说，即使是基础介绍的一章，也涨了姿势。<br>这里有指针<strong>a</strong></p>
+<ol>
+<li>如果<strong>a</strong>保存了其他变量的地址，可以说是<strong>a</strong>指向该地址。</li>
+<li><strong>*a</strong>等同于<strong>a</strong>指向的变量。</li>
+</ol>
+<p>疑问：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">void</span> *b = &amp;a;</span><br><span class="line">b++;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%p\n"</span>,&amp;a);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%lu\n"</span>,<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%p\n"</span>,(<span class="keyword">int</span> *)b);</span><br></pre></td></tr></table></figure>
+<p>我运行上面代码的时候地址加1并没有加4？why？<br>结论：因为我声明的无类型指针，系统不知道自加的时候要加多少。</p>
+<h4 id="1-3__u5173_u4E8E_u6570_u7EC4"><a href="#1-3__u5173_u4E8E_u6570_u7EC4" class="headerlink" title="1.3 关于数组"></a>1.3 关于数组</h4><ol>
+<li><strong>p[i]</strong>只是<strong>*(p + i)</strong>的简写。这个结论真是涨姿势了。<strong>[]</strong>只是一个语法糖而已。</li>
+<li>使用指针的效率并不会更高。</li>
+<li>对数组进行值传递的时候，将数组整体整理成结构体成员。</li>
+</ol>
+<h3 id="u7B2C_u4E8C_u7AE0_C_u662F_u600E_u4E48_u4F7F_u7528_u5185_u5B58_u7684"><a href="#u7B2C_u4E8C_u7AE0_C_u662F_u600E_u4E48_u4F7F_u7528_u5185_u5B58_u7684" class="headerlink" title="第二章 C是怎么使用内存的"></a>第二章 C是怎么使用内存的</h3><h4 id="2-1__u865A_u62DF_u5730_u5740"><a href="#2-1__u865A_u62DF_u5730_u5740" class="headerlink" title="2.1 虚拟地址"></a>2.1 虚拟地址</h4><p>要点：程序面对的都是虚拟地址空间（这些结论已经有一定了解了）</p>
+<h4 id="2-2__u5185_u5B58_u7684_u4F7F_u7528_u65B9_u6CD5"><a href="#2-2__u5185_u5B58_u7684_u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="2.2 内存的使用方法"></a>2.2 内存的使用方法</h4><ol>
+<li>全局变量：定义在函数外面的变量都为全局变量</li>
+<li><strong>static</strong>：除去声明为静态变量外，全局变量加上<strong>static</strong> 后限定作用域在源代码文件中。</li>
+<li>局部变量声明在函数中。<br> </li>
+</ol>
+<h4 id="2-3__u51FD_u6570_u548C_u5B57_u7B26_u4E32_u5E38_u91CF"><a href="#2-3__u51FD_u6570_u548C_u5B57_u7B26_u4E32_u5E38_u91CF" class="headerlink" title="2.3 函数和字符串常量"></a>2.3 函数和字符串常量</h4><p>函数和字符串常量分配在内存相邻的地址上。另外讲解了函数指针，因为之前就习惯用函数指针了，这里相对好理解。</p>
+<h4 id="2-4__u9759_u6001_u53D8_u91CF"><a href="#2-4__u9759_u6001_u53D8_u91CF" class="headerlink" title="2.4 静态变量"></a>2.4 静态变量</h4><p>讲解了下各种变量编译之后的样子。跟着demo运行了一下，算是对.o文件更加理解了些。</p>
+<h4 id="2-5__u81EA_u52A8_u53D8_u91CF_uFF08_u6808_uFF09"><a href="#2-5__u81EA_u52A8_u53D8_u91CF_uFF08_u6808_uFF09" class="headerlink" title="2.5 自动变量（栈）"></a>2.5 自动变量（栈）</h4><p>描述了调用函数时内存的改变，调用时将函数和形参入栈，函数返回时出栈。<br>然后介绍了<strong>可变长参数函数</strong>和断言<strong>assert()</strong>。<br>递归：介绍了下什么情况下用递归，举了快排的例子。</p>
+<h4 id="2-6_malloc_28_29"><a href="#2-6_malloc_28_29" class="headerlink" title="2.6 malloc()"></a>2.6 malloc()</h4><p>结构体动态分配内存。<br>malloc()不是<strong>系统调用</strong>。这里不太理解。</p>
+<h4 id="2-7__u5185_u5B58_u5E03_u5C40_u5BF9_u9F50"><a href="#2-7__u5185_u5B58_u5E03_u5C40_u5BF9_u9F50" class="headerlink" title="2.7 内存布局对齐"></a>2.7 内存布局对齐</h4><p>没啥好说的，本来也知道。但是让布局对齐的优点在哪里？需要调研。</p>
+<h3 id="u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5"><a href="#u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5" class="headerlink" title="第三章 揭秘C的语法"></a>第三章 揭秘C的语法</h3><p>待续~<br>                                                                                                                                                                                                                                                                                                                                         </p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2015/12/28/《征服C指针》阅读笔记/">《征服C指针》阅读笔记</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Max Wang 的个人博客">Max Wang</a></p>
+        <p><span>发布时间:</span>2015年12月28日 - 14时42分</p>
+        <p><span>最后更新:</span>2015年12月29日 - 13时49分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2015/12/28/《征服C指针》阅读笔记/" title="《征服C指针》阅读笔记">http://mmmmmax.com/2015/12/28/《征服C指针》阅读笔记/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://mmmmmax.com/2015/12/28/《征服C指针》阅读笔记/　　作者: Max Wang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2015/12/23/QRCode-turtiol/">
+                    iOS二维码扫描识别
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#u7F18_u7531"><span class="toc-number">1.</span> <span class="toc-text">缘由</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7B2C_u4E00_u7AE0__u4ECE_u57FA_u7840_u5F00_u59CB"><span class="toc-number"></span> <span class="toc-text">第一章 从基础开始</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1__u4EC0_u4E48_u662FC"><span class="toc-number">1.</span> <span class="toc-text">1.1 什么是C</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2__u5173_u4E8E_u6307_u9488"><span class="toc-number">2.</span> <span class="toc-text">1.2 关于指针</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3__u5173_u4E8E_u6570_u7EC4"><span class="toc-number">3.</span> <span class="toc-text">1.3 关于数组</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7B2C_u4E8C_u7AE0_C_u662F_u600E_u4E48_u4F7F_u7528_u5185_u5B58_u7684"><span class="toc-number"></span> <span class="toc-text">第二章 C是怎么使用内存的</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1__u865A_u62DF_u5730_u5740"><span class="toc-number">1.</span> <span class="toc-text">2.1 虚拟地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2__u5185_u5B58_u7684_u4F7F_u7528_u65B9_u6CD5"><span class="toc-number">2.</span> <span class="toc-text">2.2 内存的使用方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3__u51FD_u6570_u548C_u5B57_u7B26_u4E32_u5E38_u91CF"><span class="toc-number">3.</span> <span class="toc-text">2.3 函数和字符串常量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4__u9759_u6001_u53D8_u91CF"><span class="toc-number">4.</span> <span class="toc-text">2.4 静态变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5__u81EA_u52A8_u53D8_u91CF_uFF08_u6808_uFF09"><span class="toc-number">5.</span> <span class="toc-text">2.5 自动变量（栈）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6_malloc_28_29"><span class="toc-number">6.</span> <span class="toc-text">2.6 malloc()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-7__u5185_u5B58_u5E03_u5C40_u5BF9_u9F50"><span class="toc-number">7.</span> <span class="toc-text">2.7 内存布局对齐</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5"><span class="toc-number"></span> <span class="toc-text">第三章 揭秘C的语法</span></a>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script>
+    var toc_button = document.getElementById("tocButton");
+    var toc_div = document.getElementById("toc");
+    toc_button.onclick=function() {
+        if (toc_div.style.display == "none") {
+            toc_div.style.display = "block";
+            toc_button.value = "隐藏目录";
+            document.getElementById("switch-btn").style.display = "none";
+            document.getElementById("switch-area").style.display = "none";
+        }
+        else {
+            toc_div.style.display = "none";
+            toc_button.value = "显示目录";
+            document.getElementById("switch-btn").style.display = "block";
+            document.getElementById("switch-area").style.display = "block";
+        }
+    }
+
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2015/12/23/QRCode-turtiol/" title="下一篇: iOS二维码扫描识别">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2015/12/28/《征服C指针》阅读笔记/">《征服C指针》阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/23/QRCode-turtiol/">iOS二维码扫描识别</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/">Auto Layout中的VFL使用教程（译）</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200);
+            }
+            else {
+                $(".switch-btn, .switch-area").toggle(200);
+            }
+        })
+    </script>
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: false,
+            isPost: true,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2015 Max Wang
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

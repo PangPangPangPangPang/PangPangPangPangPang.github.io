@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>iOS二维码扫描识别 | One Punch Man</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言二维码功能在app中很常用，在iOS7之前iOS的二维码功能通常用ZXing等框架完成。iOS7之后AVFoundation已经支持了原生的二维码扫描功能。这篇文章帮助大家在app中实现此功能，并且会详细的解释一下其中的过程。在开始编码之前，先介绍一下相关的概念。
+概念相关AVCaptureSession熟悉AVFoundation的同学都会知道AVCaptureSession是其中的核心类。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS二维码扫描识别">
+<meta property="og:url" content="http://mmmmmax.com/2015/12/23/QRCode-turtiol/index.html">
+<meta property="og:site_name" content="One Punch Man">
+<meta property="og:description" content="前言二维码功能在app中很常用，在iOS7之前iOS的二维码功能通常用ZXing等框架完成。iOS7之后AVFoundation已经支持了原生的二维码扫描功能。这篇文章帮助大家在app中实现此功能，并且会详细的解释一下其中的过程。在开始编码之前，先介绍一下相关的概念。
+概念相关AVCaptureSession熟悉AVFoundation的同学都会知道AVCaptureSession是其中的核心类。">
+<meta property="og:updated_time" content="2015-12-23T14:01:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS二维码扫描识别">
+<meta name="twitter:description" content="前言二维码功能在app中很常用，在iOS7之前iOS的二维码功能通常用ZXing等框架完成。iOS7之后AVFoundation已经支持了原生的二维码扫描功能。这篇文章帮助大家在app中实现此功能，并且会详细的解释一下其中的过程。在开始编码之前，先介绍一下相关的概念。
+概念相关AVCaptureSession熟悉AVFoundation的同学都会知道AVCaptureSession是其中的核心类。">
+  
+    <link rel="alternative" href="/atom.xml" title="One Punch Man" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Max Wang</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/C语言/" style="font-size: 10px;">C语言</a> <a href="/tags/VFL/" style="font-size: 10px;">VFL</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/qrcode/" style="font-size: 10px;">qrcode</a> <a href="/tags/指针/" style="font-size: 10px;">指针</a> <a href="/tags/翻译/" style="font-size: 10px;">翻译</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Max Wang</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/img/avatar.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Max Wang</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-QRCode-turtiol" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/23/QRCode-turtiol/" class="article-date">
+      <time datetime="2015-12-23T04:35:36.000Z" itemprop="datePublished">2015-12-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      iOS二维码扫描识别
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/qrcode/">qrcode</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="u524D_u8A00"><a href="#u524D_u8A00" class="headerlink" title="前言"></a>前言</h3><p>二维码功能在app中很常用，在iOS7之前iOS的二维码功能通常用<strong>ZXing</strong>等框架完成。iOS7之后<strong>AVFoundation</strong>已经支持了原生的二维码扫描功能。这篇文章帮助大家在app中实现此功能，并且会详细的解释一下其中的过程。在开始编码之前，先介绍一下相关的概念。</p>
+<h3 id="u6982_u5FF5_u76F8_u5173"><a href="#u6982_u5FF5_u76F8_u5173" class="headerlink" title="概念相关"></a>概念相关</h3><h4 id="AVCaptureSession"><a href="#AVCaptureSession" class="headerlink" title="AVCaptureSession"></a>AVCaptureSession</h4><p>熟悉<strong>AVFoundation</strong>的同学都会知道<strong>AVCaptureSession</strong>是其中的核心类。<strong>AVCaptureSession</strong>协调了一个物理设备的输入（input）和输出（output）。</p>
+<h4 id="AVCaptureInput"><a href="#AVCaptureInput" class="headerlink" title="AVCaptureInput"></a>AVCaptureInput</h4><p>顾名思义，就是上文中<strong>AVCaptureSession</strong>协调的输入。不过<strong>AVCaptureInput</strong>是一个虚类不能直接实例化，可以使用其子类。<strong>AVCaptureInput</strong>有多个接口可以同时承载一种或多种媒体数据，比如可以同时承载音频数据流和视频数据流。本文章使用的输入是<strong>AVCaptureInput</strong>的子类<strong>AVCaptureDeviceInput</strong>。<strong>AVCaptureDeviceInput</strong>提供了利用<strong>AVCaptureDevice</strong>捕捉流媒体的功能，顾名思义，就是利用这个输入就可以捕捉到二维码并且识别。</p>
+<h4 id="AVCaptureDevice"><a href="#AVCaptureDevice" class="headerlink" title="AVCaptureDevice"></a>AVCaptureDevice</h4><p>物理设备的一个抽象，具体到设备上比如摄像头，麦克风。</p>
+<h4 id="AVCaptureOutput"><a href="#AVCaptureOutput" class="headerlink" title="AVCaptureOutput"></a>AVCaptureOutput</h4><p>跟<strong>AVCaptureInput</strong>相同也是抽象基类，比如说我们看到的视频，听到的音频都是通过它处理输出。<strong>AVCaptureInput</strong>可以持有一个或多个<strong>AVCaptureConnection</strong>实例。本文章使用的是其子类<strong>AVCaptureMetadataOutput</strong>，该类可以捕获从输出中获取的元数据（metadata）。</p>
+<h4 id="AVCaptureConnection"><a href="#AVCaptureConnection" class="headerlink" title="AVCaptureConnection"></a>AVCaptureConnection</h4><p>本文中没有使用到，但是还是简单介绍一下概念。<strong>AVCaptureConnection</strong>可以将<strong>AVCaptureInputPort</strong>和<strong>AVCaptureOutput</strong>或者<strong>AVCaptureVideoPreviewLayer</strong>关联起来。本文不需要手动调用这些关联，当利用<strong>AVCaptureSession</strong>关联输入和输出的时候，这些关联就已经生成。</p>
+<h3 id="u5F00_u59CB"><a href="#u5F00_u59CB" class="headerlink" title="开始"></a>开始</h3><p>首先看一下接口文件</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@protocol  QRCodeParserDelegate&#60;NSObject&#62;&#10;&#10;@required&#10;&#10;- (void)QRCodeParser:(AVMetadataMachineReadableCodeObject *)object;&#10;&#10;@end&#10;&#10;typedef NS_ENUM(NSInteger, QRCodeParserStatus) &#123;&#10;    QRCodeParserStatusPrepare  = 1,&#10;    QRCodeParserStatusScanning = 2,&#10;    QRCodeParserStatusStop     = 3&#10;&#125;;&#10;&#10;@interface QRCodeParser : NSObject&#10;&#10;@property (nonatomic, assign)QRCodeParserStatus status;&#10;&#10;- (instancetype)initWithFrame:(CGRect)rect&#10;                  andDelegate:(UIViewController&#60;QRCodeParserDelegate&#62;*)delegate;&#10;- (void)stopReading;&#10;- (void)startReading;&#10;- (BOOL)initQRScanner;&#10;&#10;@end</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>QRCodeParserDelegate</strong>作为识别出二维码的回调。</li>
+<li><strong>QRCodeParserStatus</strong>parser的状态机，本文没有使用到。</li>
+<li><strong>initWithFrame:andDelegate:</strong>为parser的初始化方法。</li>
+<li><strong>startReading</strong>开始扫描。</li>
+<li><strong>stopReading</strong>停止扫描。</li>
+<li><strong>initQRScanner</strong>初始化二维码扫描器</li>
+</ul>
+<p>以下是核心部分代码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)initQRScanner&#123;&#10;    NSError *error = nil;&#10;    &#10;    //1&#10;    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];&#10;    //2&#10;    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:captureDevice&#10;                                                                        error:&#38;error];&#10;    if (!input || error) &#123;&#10;        NSLog(@&#34;%@&#34;, [error localizedDescription]);&#10;        return NO;&#10;    &#125;&#10;    //3&#10;    _captureSession = [AVCaptureSession new];&#10;    [_captureSession addInput:input];&#10;    SafeRelease(input);&#10;    &#10;    //4&#10;    _captureMetadataOutput = [AVCaptureMetadataOutput new];&#10;    [_captureMetadataOutput setRectOfInterest:CGRectMake(0.25, 0.25, 0.5, 0.5)];&#10;    [_captureSession addOutput:_captureMetadataOutput];&#10;    &#10;    //5&#10;    dispatchQueue = dispatch_queue_create(&#34;QRQueue&#34;, NULL);&#10;    [_captureMetadataOutput setMetadataObjectsDelegate:self queue:dispatchQueue];&#10;    [_captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObject:AVMetadataObjectTypeQRCode]];&#10;    &#10;    //6&#10;    _videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];&#10;    [_videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];&#10;    [_videoPreviewLayer setFrame:_rect];&#10;    [_ownerVC.view.layer addSublayer:_videoPreviewLayer];&#10;    &#10;    //7&#10;    [_captureSession startRunning];&#10;    &#10;    return YES;&#10;    &#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来一步步解释上述代码：</p>
+<ol>
+<li>初始化捕捉设备，并且该设备类型为视频设备<strong>AVMediaTypeVideo</strong></li>
+<li>利用<strong>captureDevice</strong>生成输入源<strong>AVCaptureDeviceInput</strong>，从而此输入源交给<strong>AVCaptureSession</strong>来协调处理。</li>
+<li>初始化<strong>_captureSession</strong>协调输入输出，并将输入源<strong>input</strong>赋值。</li>
+<li>生成输出源<strong>_captureMetadataOutput</strong>，并将它付给<strong>AVCaptureSession</strong>，<strong>rectOfInterest</strong>表示将输出源可识别的范围控制在一个方形中。</li>
+<li>注册一个线程，并在该线程中设置<strong>_captureMetadataOutput</strong>代理为<strong>self</strong>。</li>
+<li>初始化<strong>_videoPreviewLayer</strong>来承载<strong>input</strong>提供的画面，并将其加在目标视图上。</li>
+</ol>
+<p>接下来实现其<strong>startReading</strong>，<strong>stopReading</strong>方法：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)startReading&#123;&#10;    [_captureSession startRunning];&#10;&#125;&#10;&#10;-(void)stopReading&#123;&#10;    [_captureSession stopRunning];&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>扫描二维码之后的回调：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection&#123;&#10;    for (AVMetadataObject *object in metadataObjects) &#123;&#10;        if ([[object type] isEqualToString:AVMetadataObjectTypeQRCode]&#10;            &#38;&#38; [object isKindOfClass:[AVMetadataMachineReadableCodeObject class]]) &#123;&#10;            [self stopReading];&#10;            if ([_ownerVC respondsToSelector:@selector(QRCodeParser:)]) &#123;&#10;                [_ownerVC performSelector:@selector(QRCodeParser:)&#10;                                 onThread:[NSThread mainThread]&#10;                               withObject:object&#10;                            waitUntilDone:YES];&#10;            &#125;&#10;        &#125;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是该回调触发在后台线程，如果有处理UI相关的操作请在主线程。<br>接下来是有关根据二维码图片读取内容和根据内容生成二维码的代码截取：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@implementation UIImage (QRCodeGenerator)&#10;&#10;- (NSString *)QRCodeParserToContent&#123;&#10;    CIContext *context = [CIContext contextWithOptions:nil];&#10;    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode&#10;                                              context:context&#10;                                              options:@&#123;CIDetectorAccuracy:CIDetectorAccuracyHigh&#125;];&#10;    NSMutableString *result = [NSMutableString new];&#10;    CIImage *ciImage = [CIImage imageWithCGImage:self.CGImage];&#10;    NSArray *features = [detector featuresInImage:ciImage];&#10;    if ([features count] &#62; 0) &#123;&#10;        for (CIQRCodeFeature *feature in features) &#123;&#10;            [result appendString:feature.messageString];&#10;        &#125;&#10;    &#125;else&#123;&#10;        result = nil;&#10;    &#125;&#10;    return result;&#10;&#125;&#10;&#10;+ (UIImage *)createQRForString:(NSString *)qrString&#10;                     imageSize:(CGSize)imageSize &#123;&#10;    NSData *stringData = [qrString dataUsingEncoding:NSUTF8StringEncoding];&#10;    CIFilter *qrFilter = [CIFilter filterWithName:@&#34;CIQRCodeGenerator&#34;];&#10;    [qrFilter setDefaults];&#10;    [qrFilter setValue:stringData forKey:@&#34;inputMessage&#34;];&#10;    [qrFilter setValue:@&#34;M&#34; forKey:@&#34;inputCorrectionLevel&#34;];&#10;    &#10;    CIImage *outPutCIImage = qrFilter.outputImage;&#10;&#10;    CGImageRef imageRef = [[CIContext contextWithOptions:nil] createCGImage:outPutCIImage&#10;                                                                   fromRect:outPutCIImage.extent];&#10;    CGSize size = CGSizeMake(outPutCIImage.extent.size.width,&#10;                             outPutCIImage.extent.size.height);&#10;    &#10;    UIGraphicsBeginImageContextWithOptions(CGSizeMake(size.width * 10.0,&#10;                                                      size.height * 10.0),&#10;                                           NO,&#10;                                           1.0);&#10;    CGContextRef context = UIGraphicsGetCurrentContext();&#10;    CGContextSetInterpolationQuality(context, kCGInterpolationNone);&#10;    CGContextSetAllowsAntialiasing(context, YES);&#10;    CGAffineTransform trans = CGAffineTransformMakeTranslation(0.0, size.height * 10.0);&#10;    trans = CGAffineTransformScale(trans, 10.0, -10.0);&#10;    CGContextConcatCTM(context, trans);&#10;    CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), imageRef);&#10;    &#10;    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();&#10;    UIGraphicsEndImageContext();&#10;    &#10;    return result;&#10;&#125;&#10;@end</span><br></pre></td></tr></table></figure>
+<p>详细的意义以后填坑吧，谢谢。<br>哦对了，根据图片识别二维码最低支持到iOS8。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2015/12/23/QRCode-turtiol/">iOS二维码扫描识别</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Max Wang 的个人博客">Max Wang</a></p>
+        <p><span>发布时间:</span>2015年12月23日 - 12时35分</p>
+        <p><span>最后更新:</span>2015年12月23日 - 22时01分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2015/12/23/QRCode-turtiol/" title="iOS二维码扫描识别">http://mmmmmax.com/2015/12/23/QRCode-turtiol/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://mmmmmax.com/2015/12/23/QRCode-turtiol/　　作者: Max Wang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2015/12/28/《征服C指针》阅读笔记/">
+                    《征服C指针》阅读笔记
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/">
+                    Auto Layout中的VFL使用教程（译）
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#u524D_u8A00"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u6982_u5FF5_u76F8_u5173"><span class="toc-number">2.</span> <span class="toc-text">概念相关</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#AVCaptureSession"><span class="toc-number">2.1.</span> <span class="toc-text">AVCaptureSession</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AVCaptureInput"><span class="toc-number">2.2.</span> <span class="toc-text">AVCaptureInput</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AVCaptureDevice"><span class="toc-number">2.3.</span> <span class="toc-text">AVCaptureDevice</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AVCaptureOutput"><span class="toc-number">2.4.</span> <span class="toc-text">AVCaptureOutput</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AVCaptureConnection"><span class="toc-number">2.5.</span> <span class="toc-text">AVCaptureConnection</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u5F00_u59CB"><span class="toc-number">3.</span> <span class="toc-text">开始</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script>
+    var toc_button = document.getElementById("tocButton");
+    var toc_div = document.getElementById("toc");
+    toc_button.onclick=function() {
+        if (toc_div.style.display == "none") {
+            toc_div.style.display = "block";
+            toc_button.value = "隐藏目录";
+            document.getElementById("switch-btn").style.display = "none";
+            document.getElementById("switch-area").style.display = "none";
+        }
+        else {
+            toc_div.style.display = "none";
+            toc_button.value = "显示目录";
+            document.getElementById("switch-btn").style.display = "block";
+            document.getElementById("switch-area").style.display = "block";
+        }
+    }
+
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2015/12/28/《征服C指针》阅读笔记/" title="上一篇: 《征服C指针》阅读笔记">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/" title="下一篇: Auto Layout中的VFL使用教程（译）">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2015/12/28/《征服C指针》阅读笔记/">《征服C指针》阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/23/QRCode-turtiol/">iOS二维码扫描识别</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/">Auto Layout中的VFL使用教程（译）</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200);
+            }
+            else {
+                $(".switch-btn, .switch-area").toggle(200);
+            }
+        })
+    </script>
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: false,
+            isPost: true,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2015 Max Wang
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

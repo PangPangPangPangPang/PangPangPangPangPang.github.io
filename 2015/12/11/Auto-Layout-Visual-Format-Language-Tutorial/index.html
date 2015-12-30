@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Auto Layout中的VFL使用教程（译） | One Punch Man</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="原文链接
+Auto Layout的可视格式化语言（以下简称VFL）允许使用者通过ASCII-art格式化字符串定义约束。用一行简单的代码，你可以定义多个水平或垂直方向的约束。对比一个一个加约束，这样可以可以节省很多代码量。在这个教程中，你可以用VFL做下面这些事情哦：!
+
+构建水平和垂直的约束
+在VFL中使用views描述
+在VFL中使用metrics
+使用layout options去关联其他界">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Auto Layout中的VFL使用教程（译）">
+<meta property="og:url" content="http://mmmmmax.com/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/index.html">
+<meta property="og:site_name" content="One Punch Man">
+<meta property="og:description" content="原文链接
+Auto Layout的可视格式化语言（以下简称VFL）允许使用者通过ASCII-art格式化字符串定义约束。用一行简单的代码，你可以定义多个水平或垂直方向的约束。对比一个一个加约束，这样可以可以节省很多代码量。在这个教程中，你可以用VFL做下面这些事情哦：!
+
+构建水平和垂直的约束
+在VFL中使用views描述
+在VFL中使用metrics
+使用layout options去关联其他界">
+<meta property="og:image" content="http://cdn4.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Initial-Screen.png">
+<meta property="og:image" content="http://cdn1.raywenderlich.com/wp-content/uploads/2015/07/VisualFormatLanguageOptionsImage.png">
+<meta property="og:image" content="http://cdn5.raywenderlich.com/wp-content/uploads/2015/08/got_it.png">
+<meta property="og:image" content="http://cdn2.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Hidden-Icons.png">
+<meta property="og:image" content="http://cdn1.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Horizontal-Layout.png">
+<meta property="og:image" content="http://cdn3.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Layout-Before-Options.png">
+<meta property="og:image" content="http://cdn2.raywenderlich.com/wp-content/uploads/2015/07/No-Center-RageMakger.png">
+<meta property="og:image" content="http://cdn1.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-SublayoutViewHeights.png">
+<meta property="og:image" content="http://cdn2.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Without-20pts.png">
+<meta property="og:image" content="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Final.png">
+<meta property="og:image" content="http://cdn3.raywenderlich.com/wp-content/uploads/2015/08/constraints_constraining.png">
+<meta property="og:updated_time" content="2015-12-23T14:01:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Auto Layout中的VFL使用教程（译）">
+<meta name="twitter:description" content="原文链接
+Auto Layout的可视格式化语言（以下简称VFL）允许使用者通过ASCII-art格式化字符串定义约束。用一行简单的代码，你可以定义多个水平或垂直方向的约束。对比一个一个加约束，这样可以可以节省很多代码量。在这个教程中，你可以用VFL做下面这些事情哦：!
+
+构建水平和垂直的约束
+在VFL中使用views描述
+在VFL中使用metrics
+使用layout options去关联其他界">
+  
+    <link rel="alternative" href="/atom.xml" title="One Punch Man" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.png" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">Max Wang</a></h1>
+        </hgroup>
+
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/C语言/" style="font-size: 10px;">C语言</a> <a href="/tags/VFL/" style="font-size: 10px;">VFL</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/qrcode/" style="font-size: 10px;">qrcode</a> <a href="/tags/指针/" style="font-size: 10px;">指针</a> <a href="/tags/翻译/" style="font-size: 10px;">翻译</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Max Wang</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img lazy-src="/img/avatar.png" class="js-avatar">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Max Wang</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto:123@123.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="/#" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Auto-Layout-Visual-Format-Language-Tutorial" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/" class="article-date">
+      <time datetime="2015-12-11T06:12:37.000Z" itemprop="datePublished">2015-12-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Auto Layout中的VFL使用教程（译）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AutoLayout/">AutoLayout</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VFL/">VFL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/">iOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/翻译/">翻译</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><a href="http://www.raywenderlich.com/110393/auto-layout-visual-format-language-tutorial" target="_blank" rel="external">原文链接</a></p>
+<p>Auto Layout的可视格式化语言（以下简称VFL）允许使用者通过ASCII-art格式化字符串定义约束。<br>用一行简单的代码，你可以定义多个水平或垂直方向的约束。对比一个一个加约束，这样可以可以节省很多代码量。<br>在这个教程中，你可以用VFL做下面这些事情哦：!</p>
+<ul>
+<li>构建水平和垂直的约束</li>
+<li>在VFL中使用<strong>views</strong>描述</li>
+<li>在VFL中使用<strong>metrics</strong></li>
+<li>使用<strong>layout options</strong>去关联其他界面元素</li>
+<li>使用<strong>layout guides</strong>处理视图的上下边距（译者：比如<strong>UINavigationBar</strong>）</li>
+</ul>
+<blockquote>
+<p><strong>注意：建议读者对Auto Layout有充分了解的情况下阅读此文，如果对于Auto Layout不是很熟悉，建议先阅读<a href="http://www.raywenderlich.com/115440/auto-layout-tutorial-in-ios-9-part-1-getting-started-2" target="_blank" rel="external">Auto Layout Tutorial Part 1: Getting Started</a>和<a href="http://www.raywenderlich.com/115444/auto-layout-tutorial-in-ios-9-part-2-constraints" target="_blank" rel="external">Auto Layout Tutorial Part 2: Constraints</a></strong></p>
+</blockquote>
+<h3 id="u51C6_u5907_u5F00_u59CB_u5427_uFF01"><a href="#u51C6_u5907_u5F00_u59CB_u5427_uFF01" class="headerlink" title="准备开始吧！"></a>准备开始吧！</h3><p>首先下载<a href="http://cdn4.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Starter.zip" target="_blank" rel="external">事例工程</a>便于教程使用，该工程提供了一个初级网络社交app-<strong>Grapevine</strong>的基本欢迎页面。在Xcode中运行工程；你将看到如下画面（在模拟器的<strong>Hardware\Rotate Right</strong>中旋转屏幕）:<br><img src="http://cdn4.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Initial-Screen.png" alt="welcomepage"><br>好吧，这个页面真是一团乱，为什么这种情况会发生呢？面对这种情况我们应该怎么做呢？<br>当前界面的所有元素都是跟界面的上边缘（top）和左边缘（left）联系的，这是因为它们没有用Auto Layout约束。通过接下来的教程你会让视图看起来更漂亮。<br>打开<strong>Main.storyboard</strong>观察界面元素。注意到这些元素都被设置为在编译期移除Auto Layout约束。你不应该在真实项目中这样使用，但是这会让你节省一些元素的初始化时间。<br>接下来，打开<strong>ViewController.swift</strong>。在顶部，你可以看到在<strong>Main.storyboard</strong>中跟Interface Builder（IB）视图元素联系的outlet和一些在runtime代替约束的属性。<br>这个时候没啥可以说，但是接下来有一大堆跟VFL有关的东西要学！</p>
+<h3 id="VFL_u8BED_u6CD5"><a href="#VFL_u8BED_u6CD5" class="headerlink" title="VFL语法"></a>VFL语法</h3><p>在你开始编写布局和约束之前，你需要有一些关于VFL格式化串的相关知识。<br>第一件要知道的事情：VFL格式化串可以分成如下组成：<br><img src="http://cdn1.raywenderlich.com/wp-content/uploads/2015/07/VisualFormatLanguageOptionsImage.png" alt="formatString"><br>接下来一个一个解释VFL格式化串：</p>
+<ol>
+<li>约束的方向，非必须。可以有以下的值：<ul>
+<li>H:表示水平方向。</li>
+<li>V:表示垂直方向。</li>
+<li>不指定:Auto Layout默认水平方向。</li>
+</ul>
+</li>
+<li>和父视图的头部关联，非必须<ul>
+<li>父视图的上边缘和视图的上边缘的距离（垂直方向）</li>
+<li>父视图的头部边缘和视图的头部边缘的距离（水平方向）</li>
+</ul>
+</li>
+<li>需要布局的视图，必须。</li>
+<li>跟另一个视图关联，非必须。    </li>
+<li>和父视图的尾部关联，非必须。<ul>
+<li>父视图的下边缘和视图的下边缘的距离（垂直方向）</li>
+<li>父视图的尾部边缘和视图的尾部边缘的距离（水平方向）</li>
+</ul>
+</li>
+<li>另外在上图中还有两个特殊的字符，他们的意思是：<ul>
+<li><strong>“?”</strong>代表在格式化串中非必须。</li>
+<li><strong>“*”</strong>代表允许在格式化串中出现0次或多次。</li>
+</ul>
+</li>
+</ol>
+<h3 id="u53EF_u4F7F_u7528_u7684_u7B26_u53F7"><a href="#u53EF_u4F7F_u7528_u7684_u7B26_u53F7" class="headerlink" title="可使用的符号"></a>可使用的符号</h3><p>VFL使用一系列符号去描述布局</p>
+<ul>
+<li><strong>|</strong> 父视图</li>
+<li><strong>-</strong> 标准间距(通常8pt；如果这个代表到父视图边缘的间距可以改变)</li>
+<li><strong>==</strong> 宽度相等（可被删除）</li>
+<li><strong>-20-</strong> 不标准间距（20pt）</li>
+<li><strong>&lt;=</strong> 小于等于</li>
+<li><strong>&gt;=</strong> 大于等于</li>
+<li><strong>@250</strong> 约束权重；可以为0到1000得任意值<ul>
+<li>250 - 低权重</li>
+<li>750 - 高权重</li>
+<li>1000 - 绝对权重</li>
+</ul>
+</li>
+</ul>
+<h3 id="u683C_u5F0F_u5316_u4E32_u5B9E_u4F8B"><a href="#u683C_u5F0F_u5316_u4E32_u5B9E_u4F8B" class="headerlink" title="格式化串实例"></a>格式化串实例</h3><pre><code>H:|-[icon(==iconDate)]-20-[iconLabel(120@250)]-20@750-[iconDate(&gt;=50)]-|
+</code></pre><p>接下来一步一步解释这个串：</p>
+<ul>
+<li>H: 水平方向。</li>
+<li>|-[icon icon的头边缘和父视图有一个标准间距。</li>
+<li>==iconDate icon的宽度应该和iconDate的宽度相等。</li>
+<li>]-20-[iconLabel icon的尾边缘和iconLabel的头边缘有20pt的距离。</li>
+<li>[iconLabel(120@250)]iconLabel有一个120pt的宽度，设置成低权重，如果出现冲突Auto Layout会打破这条约束。</li>
+<li>-20@750- iconLabel的的尾边缘和iconDate的头边缘有20pt的距离，设置成高权重，如果出现冲突Auto Layout不会打破这条约束。</li>
+<li>[iconDate(&gt;=50)] iconDate的宽度应该大于等于50pt。</li>
+<li>-| iconDate的尾边缘和父视图的尾边缘有一个标准间距。<br><img src="http://cdn5.raywenderlich.com/wp-content/uploads/2015/08/got_it.png" alt="good"><br>现在你对VFL已经有了一个基本的认识–接下来就要把这些知识用到实际应用中了。</li>
+</ul>
+<h3 id="u521B_u5EFA_u7EA6_u675F"><a href="#u521B_u5EFA_u7EA6_u675F" class="headerlink" title="创建约束"></a>创建约束</h3><p>Apple在<strong>NSLayoutConstraint</strong>提供了类方法<strong>constraintsWithVisualFormat</strong>去创建约束。你将在<strong>Grapevine</strong>程序化的创建约束</p>
+<p>在Xcode中打开<strong>ViewController.swift</strong>，并且添加如下代码到<strong>viewDidLoad()</strong>中：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">appImageView.hidden = <span class="literal">true</span></span><br><span class="line">welcomeLabel.hidden = <span class="literal">true</span></span><br><span class="line">summaryLabel.hidden = <span class="literal">true</span></span><br><span class="line">pageControl.hidden = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>这些代码会隐藏除了<strong>iconImageView</strong>，<strong>appNameLabel</strong>和<strong>skipButton</strong>之外的元素。运行工程；你会看到如下：<br><img src="http://cdn2.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Hidden-Icons.png" alt="good"><br>棒！你现在已经清除了烦人的元素了，现在在<strong>viewDidLoad()</strong>添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="keyword">let</span> views = [<span class="string">"iconImageView"</span>: iconImageView,</span><br><span class="line">  <span class="string">"appNameLabel"</span>: appNameLabel,</span><br><span class="line">  <span class="string">"skipButton"</span>: skipButton]</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="keyword">var</span> allConstraints = [<span class="type">NSLayoutConstraint</span>]()</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="keyword">let</span> iconVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:|-20-[iconImageView(30)]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += iconVerticalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"><span class="keyword">let</span> nameLabelVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:|-23-[appNameLabel]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += nameLabelVerticalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="keyword">let</span> skipButtonVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:|-20-[skipButton]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += skipButtonVerticalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="keyword">let</span> topRowHorizontalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"H:|-15-[iconImageView(30)]-[appNameLabel]-[skipButton]-15-|"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += topRowHorizontalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 7</span></span><br><span class="line"><span class="type">NSLayoutConstraint</span>.activateConstraints(allConstraints)</span><br></pre></td></tr></table></figure>
+<p>接下来一步步解释上面的代码：</p>
+<ol>
+<li>创建一个字典，这个字典用字符串和view对应，用来在格式化串中使用。</li>
+<li>创建一个约束数组，你会在接下来的代码中向里面添加约束。</li>
+<li>创建<strong>iconImageView</strong>的垂直约束，距父视图的上边缘20pt，本身高度30pt。</li>
+<li>创建<strong>appNameLabel</strong>的垂直约束，距父视图的上边缘23pt。</li>
+<li>创建<strong>skipButton</strong>的垂直约束，距父视图的上边缘20pt。</li>
+<li>设置上面三个元素的水平约束，<strong>iconImageView</strong>的头边缘距父视图的头边缘8pt，宽度30pt。接下来，<strong>iconImageView</strong>的尾边缘距<strong>appNameLabel</strong>头边缘8pt，<strong>appNameLabel</strong>的尾边缘距<strong>skipButton</strong>的头边缘8pt，最后<strong>skipButton</strong>的尾边缘距离父视图的尾边缘15pt。</li>
+<li>用<strong>NSLayoutConstraint</strong>的类方法<strong>activateConstraints(_:)</strong>启用约束。在这个步骤你需要添加<strong>allConstraints</strong>数组。</li>
+</ol>
+<blockquote>
+<p><strong>注意：在views字典中的key必须在格式化串中得view串匹配。如果没有，Auto Layout将不能找到引用并且在runtime崩溃。</strong></p>
+</blockquote>
+<p>运行工程，元素现在看起来怎么样？<br><img src="http://cdn1.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Horizontal-Layout.png" alt="good"><br>哈哈，看看是不是已经变得好看多了？<br>现在把它放着，这不过是个前戏（误）。你还要有一大坨代码要写呢，但是到最后这些都是值得的。<br>接下来，你需要给剩下的元素布局，首先，你需要把最开始加到<strong>viewDidLoad()</strong>的代码去掉。不要有怨言，删除下面这些：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">appImageView.hidden = <span class="literal">true</span></span><br><span class="line">welcomeLabel.hidden = <span class="literal">true</span></span><br><span class="line">summaryLabel.hidden = <span class="literal">true</span></span><br><span class="line">pageControl.hidden = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>这样最开始隐藏的元素就又出现了。<br>接下来，把当前的<strong>views</strong>替换成如下的代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> views = [<span class="string">"iconImageView"</span>: iconImageView,</span><br><span class="line"> <span class="string">"appNameLabel"</span>: appNameLabel,</span><br><span class="line"> <span class="string">"skipButton"</span>: skipButton,</span><br><span class="line"> <span class="string">"appImageView"</span>: appImageView,</span><br><span class="line"> <span class="string">"welcomeLabel"</span>: welcomeLabel,</span><br><span class="line"> <span class="string">"summaryLabel"</span>: summaryLabel,</span><br><span class="line"> <span class="string">"pageControl"</span>: pageControl]</span><br></pre></td></tr></table></figure>
+<p>现在你已经为<strong>appImageView</strong>，<strong>welcomeLabel</strong>，<strong>summaryLabel</strong>和<strong>pageControl</strong>添加了视图定义，这些都可以在VFL格式化串中使用。<br>在<strong>activateConstraints()</strong>调用之前，在<strong>viewDidLoad()</strong>中添加如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="keyword">let</span> summaryHorizontalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"H:|-15-[summaryLabel]-15-|"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += summaryHorizontalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> welcomeHorizontalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"H:|-15-[welcomeLabel]-15-|"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += welcomeHorizontalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="keyword">let</span> iconToImageVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[iconImageView]-10-[appImageView]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += iconToImageVerticalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="keyword">let</span> imageToWelcomeVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[appImageView]-10-[welcomeLabel]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += imageToWelcomeVerticalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 4</span></span><br><span class="line"><span class="keyword">let</span> summaryLabelVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[welcomeLabel]-4-[summaryLabel]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += summaryLabelVerticalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 5</span></span><br><span class="line"><span class="keyword">let</span> summaryToPageVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[summaryLabel]-15-[pageControl(9)]-15-|"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += summaryToPageVerticalConstraints</span><br></pre></td></tr></table></figure>
+<p>接下来一步步解释上面的代码：</p>
+<ol>
+<li>创建<strong>summaryLabel</strong>和<strong>welcomeLabel</strong>的水平约束，让它们的头边缘和尾边缘分别距父视图的头边缘和尾边缘15pt。</li>
+<li>创建icon和app image的垂直约束，两者距离10pt。</li>
+<li>创建app image和welcome label的垂直约束，两者距离10pt。</li>
+<li>创建welcome label和summary label的垂直约束，两者距离4pt。</li>
+<li>创建summary label和page control的垂直约束，两者相距15pt，并且page control高度为9pt，和父视图的底边缘距离15。</li>
+</ol>
+<p>运行工程；这些元素看起来怎么样？<br><img src="http://cdn3.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Layout-Before-Options.png" alt="good"><br>现在看起来还不错了哦。错，其中的一些元素的布局是正确的，然后，有些并没有，image和page control并没有居中！<br><img src="http://cdn2.raywenderlich.com/wp-content/uploads/2015/07/No-Center-RageMakger.png" alt="bad"><br>不要害怕，下一节将会告诉你更多关于布局的工具。</p>
+<h3 id="Layout_Options"><a href="#Layout_Options" class="headerlink" title="Layout Options"></a>Layout Options</h3><p>Layout Options提供了一个让你在定义约束的时候对视图进行垂线方向上的约束。<br>使用<strong>NSLayoutFormatOptions.AlignAllCenterY</strong>是一个使用Layout Options的例子，它可以让view在创建水平约束的时候同时让垂直方向居中。<br>如果你不想让水平布局的时候垂直方向都居中，而是边对边的话，那就不应该用这个选项。<br>接下来，让我们看看Layout Options在创建约束的时候是多么有用。移除<strong>viewDidLoad()</strong>中如下的代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> nameLabelVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:|-23-[appNameLabel]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += nameLabelVerticalConstraints</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> skipButtonVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:|-20-[skipButton]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br><span class="line">allConstraints += skipButtonVerticalConstraints</span><br></pre></td></tr></table></figure>
+<p>你刚刚移除了<strong>appNameLabel</strong>和<strong>skipButton</strong>的垂直布局。作为替代，你将用Layout Options去给它们添加垂直约束。<br>找到创建<strong>topRowHorizontalConstraints</strong>的代码并且设置<strong>options</strong>为<strong>[.AlignAllCenterY]</strong>。看起来是这个样子的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> topRowHorizontalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"H:|-15-[iconImageView(30)]-[appNameLabel]-[skipButton]-15-|"</span>,</span><br><span class="line">  options: [.<span class="type">AlignAllCenterY</span>],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br></pre></td></tr></table></figure>
+<p>添加<strong>NSLayoutFormatOption .AlignAllCenterY</strong>对上面格式化串中的所有视图都有效，并且创建了一个它们垂直方向中心的约束。如果<strong>iconImageView</strong>提前创建了包含高度的垂直约束也是有效的。因此，<strong>appNameLabel</strong>和<strong>skipButton</strong>同<strong>iconImageView</strong>一样垂直居中。<br>如果你现在运行，布局看起来可能没有改变，但是代码变得更棒了。移除创建<strong>welcomeHorizontalConstraints</strong>和将它放进数组的代码。这样就移除了<strong>welcomeLabel</strong>的水平约束。接下来，更新创建<strong>summaryLabelVerticalConstraints</strong>的Layout Options：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">summaryLabelVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(<span class="string">"V:[welcomeLabel]-4-[summaryLabel]"</span>,</span><br><span class="line">options: [.<span class="type">AlignAllLeading</span>, .<span class="type">AlignAllTrailing</span>],</span><br><span class="line">metrics: <span class="literal">nil</span>,</span><br><span class="line">views: views);</span><br></pre></td></tr></table></figure>
+<p>这个代码增加了<strong>NSLayoutFormatOptions</strong>的<strong>.NSLayoutFormatOptions</strong>和<strong>.AlignAllTrailing</strong>，<strong>welcomeLabel</strong>和<strong>summaryLabel’s</strong>的头边缘和尾边缘会距离它们的父视图的边缘15pt。由于提前为<strong>summaryLabel</strong>定义了水平约束，所以上述代码才会有效。虽然上面的代码带来的是同样的效果，但是实现起来更加优雅了。<br>接下来，更新你在创建<strong>summaryToPageVerticalConstraints</strong>时候的选项：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pageControlVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[summaryLabel]-15-[pageControl(9)]-15-|"</span>,</span><br><span class="line">  options: [.<span class="type">AlignAllCenterX</span>],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br></pre></td></tr></table></figure>
+<p>这样就添加了沿x轴中心对齐。同样为<strong>imageToWelcomeVerticalConstraints</strong>添加选项：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> imageToWelcomeVerticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[appImageView]-10-[welcomeLabel]"</span>,</span><br><span class="line">  options: [.<span class="type">AlignAllCenterX</span>],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br></pre></td></tr></table></figure>
+<p>运行工程，看看发生了什么？<br><img src="http://cdn1.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-SublayoutViewHeights.png" alt="perfect"><br>感觉都居中了是吧？Layout Options让你做出了一个更棒的交互界面。</p>
+<p>###NSLayoutFormat选项快速参考<br>下面是在<strong>Grapevine</strong>中使用过的属性：</p>
+<ul>
+<li><strong>.AlignAllCenterX</strong> –使用<strong>NSLayoutAttributeCenterX</strong>的对齐元素</li>
+<li><strong>.AlignAllCenterY</strong> –使用<strong>NSLayoutAttributeCenterY</strong>的对齐元素</li>
+<li><strong>.AlignAllLeading</strong> –使用<strong>NSLayoutAttributeLeading</strong>的对齐元素</li>
+<li><strong>.AlignAllTrailing</strong> –使用<strong>NSLayoutAttributeTrailing</strong>的对齐元素</li>
+</ul>
+<p>（译者：由于有些种类的文字是从右到左书写的，所以它们的<strong>.AlignAllLeading</strong>等价于<strong>.AlignAllRight</strong>，而对于中文来说，<strong>.AlignAllLeading</strong>等价于<strong>.AlignAllLeft</strong>）</p>
+<p>下面是剩余的一些属性：</p>
+<ul>
+<li><strong>.AlignAllLeft</strong> –使用<strong>NSLayoutAttributeLeft</strong>的对齐元素</li>
+<li><strong>.AlignAllRight</strong> –使用<strong>NSLayoutAttributeRight</strong>的对齐元素</li>
+<li><strong>.AlignAllTop</strong> –使用<strong>NSLayoutAttributeBottom</strong>的对齐元素</li>
+<li><strong>.AlignAllBottom</strong> –使用<strong>NSLayoutAttributeCenterX</strong>的对齐元素</li>
+<li><strong>.AlignAllBaseline</strong> –使用<strong>NSLayoutAttributeBaseline</strong>的对齐元素</li>
+</ul>
+<p>你同样可以在<a href="https://developer.apple.com/library/ios/documentation/AppKit/Reference/NSLayoutConstraint_Class/#//apple_ref/c/tdef/NSLayoutFormatOptions" target="_blank" rel="external">文档</a>详细查看。</p>
+<blockquote>
+<p><strong> 注意：为了让Layout Options有效，至少要有一个元素定义过垂直方向的约束。看下面的例子：</strong></p>
+</blockquote>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">NSLayoutConstraints</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[topView]-[middleView]-[bottomView]"</span>,</span><br><span class="line">  options: [.<span class="type">AlignAllLeading</span>],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: [<span class="string">"topView"</span>: topView, <span class="string">"middleView"</span>: middleView, <span class="string">"bottomView"</span>:<span class="string">"bottomView"</span>])</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong> </strong>topView<strong>，</strong>middleView<strong>或者</strong>bottomView<strong>其中一个必须要有一个约束来布局它们的头缘，这样Auto Layout才会正确的产生正确的约束。</strong></p>
+</blockquote>
+<p>接下来学习新的概念！<strong>Metrics</strong></p>
+<h3 id="Metrics"><a href="#Metrics" class="headerlink" title="Metrics"></a>Metrics</h3><p>Metrics是一个能在VFL格式化串中出现的以number为value的字典。如果你需要让距离变得标准化或者有些距离需要计算所以不能直接放在格式化串中的话，Metrics将会变得非常有用！<br>将如下常量声明在<strong>ViewController.swift</strong>的变量之上：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: - Constants</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">let</span> horizontalPadding: <span class="type">CGFloat</span> = <span class="number">15.0</span></span><br></pre></td></tr></table></figure>
+<p>现在你有了一个用于padding的常量，你可以创建一个metrics字典并且将这个常量使用进去。将如下代码添加到<strong>views</strong>声明的上面：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> metrics = [<span class="string">"hp"</span>: horizontalPadding,</span><br><span class="line">  <span class="string">"iconImageViewWidth"</span>: <span class="number">30.0</span>]</span><br></pre></td></tr></table></figure>
+<p>上面的代码创建的字典中的key可以再格式化串中使用。<br>接下来，用如下代码代替<strong>topRowHorizontalConstraints</strong>和<strong>summaryHorizontalConstraints</strong>的定义：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> horizontalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"H:|-hp-[iconImageView(iconImageViewWidth)]-[appNameLabel]-[skipButton]-hp-|"</span>,</span><br><span class="line">  options: [.<span class="type">AlignAllCenterY</span>],</span><br><span class="line">  metrics: metrics,</span><br><span class="line">  views: views)</span><br><span class="line"> </span><br><span class="line"><span class="keyword">let</span> summaryHorizontalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"H:|-hp-[summaryLabel]-hp-|"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: metrics,</span><br><span class="line">  views: views)</span><br></pre></td></tr></table></figure>
+<p>现在你已经将格式化串中得硬代码用metrics字典中keys代替掉了。<br>Auto Layout可以进行串替换，将metrics字典中的value替换到格式化串中的key。所以最终，<strong>hp</strong>将会被替换成15pt，<strong>iconImageViewWidth</strong>将会被替换成30pt。<br>你将一个重复出现的莫名其妙的数字变成了一个优雅的变量。如果你想要改变padding，现在就只需要做一件事了。这不是更好吗？metrics字典并不仅限制于常量；如果你需要在runtime期间进行计算，同样可以把这种变量放到metrics中。<br>最后的一点小问题是如果你想把这些元素放进<strong>UINavigationController</strong>或者<strong>UITabBarController</strong>中，那该怎么办呢？</p>
+<h3 id="Layout_Guides"><a href="#Layout_Guides" class="headerlink" title="Layout Guides"></a>Layout Guides</h3><p>视图控制器有两个可用的Layout Guides：</p>
+<ul>
+<li>topLayoutGuide</li>
+<li>bottomLayoutGuide</li>
+</ul>
+<p>它们都指定了试图控制器的视图中顶部或者底部导航栏边缘的位置，但是在<strong>Grapevine</strong>中，唯一的导航栏边缘是从状态栏开始的。<br>更新<strong>iconVerticalConstraints</strong>的声明代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> verticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:|-[iconImageView(30)]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br></pre></td></tr></table></figure>
+<p>这样你就把状态栏和<strong>iconImageView</strong>之间的20pt的距离移除了，运行代码：<br><img src="http://cdn2.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Without-20pts.png" alt="remove"><br>现在你的状态栏覆盖掉了视图上的一些元素。在横屏模式时，iOS为了给小屏幕设备提供更多的有效空间移除状态栏，这样<strong>iconImageView</strong>会紧靠在屏幕的上方。<br>使用<strong>topLayoutGuide</strong>将会解决这种问题，用如下代码代替<strong>views</strong>字典：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> views: [<span class="type">String</span>: <span class="type">AnyObject</span>] = [<span class="string">"iconImageView"</span>: iconImageView,</span><br><span class="line">  <span class="string">"appNameLabel"</span>: appNameLabel,</span><br><span class="line">  <span class="string">"skipButton"</span>: skipButton,</span><br><span class="line">  <span class="string">"appImageView"</span>: appImageView,</span><br><span class="line">  <span class="string">"welcomeLabel"</span>: welcomeLabel,</span><br><span class="line">  <span class="string">"summaryLabel"</span>: summaryLabel,</span><br><span class="line">  <span class="string">"pageControl"</span>: pageControl,</span><br><span class="line">  <span class="string">"topLayoutGuide"</span>: topLayoutGuide,</span><br><span class="line">  <span class="string">"bottomLayoutGuide"</span>: bottomLayoutGuide]</span><br></pre></td></tr></table></figure>
+<p>这次增加了<strong>topLayoutGuide</strong>和<strong>bottomLayoutGuide</strong>，它们继承自<strong>UILayoutSupport</strong>，比不是<strong>UIView</strong>。<br>接下来，就可以使用layout guides去对齐界面元素了。更新<strong>iconVerticalConstraints</strong>的声明：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> verticalConstraints = <span class="type">NSLayoutConstraint</span>.constraintsWithVisualFormat(</span><br><span class="line">  <span class="string">"V:[topLayoutGuide]-[iconImageView(30)]"</span>,</span><br><span class="line">  options: [],</span><br><span class="line">  metrics: <span class="literal">nil</span>,</span><br><span class="line">  views: views)</span><br></pre></td></tr></table></figure>
+<p>接下来运行工程，完美！<br><img src="http://cdn5.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Final.png" alt="PERFECT"><br>现在你的顶部的界面元素都依赖着<strong>topLayoutGuide</strong>布局并且无论在横屏或者竖屏模式下状态栏的展现都控制着布局。<br>在这一节，你已经学会了当界面存在状态栏的时候如何利用<strong>topLayoutGuide</strong>来控制界面元素的布局。如果你的视图控制器在<strong>UINavigationController</strong>中，<strong>topLayoutGuide</strong>将会包含状态栏和<strong>UINavigationBar</strong>的状态。同时，如果你的试图控制器在<strong>UITabBarController</strong>中，<strong>bottomLayoutGuide</strong>将会提供底部边缘的状态。</p>
+<h3 id="u9650_u5236"><a href="#u9650_u5236" class="headerlink" title="限制"></a>限制</h3><p>VFL让你用一行代码写出了多个约束，大大降低了手指的负担。但是对于当前的实现，还存在一些限制；还有一些重要的东西需要理解。</p>
+<ul>
+<li>视图中心</li>
+<li>使用约束中的Multiplier</li>
+</ul>
+<h4 id="u89C6_u56FE_u4E2D_u5FC3"><a href="#u89C6_u56FE_u4E2D_u5FC3" class="headerlink" title="视图中心"></a>视图中心</h4><p>在<strong>Grapevine</strong>中，你用了<strong>.AlignAllCenterY</strong>和<strong>.AlignAllCenterX</strong>。<br>使用这些表示你让一些视图和其他的一些视图的垂直中心或者水平中心对齐，然而只有在这些视图中存在已经有足够约束能够确定它们的水平和垂直中心位置的时候才能变得有效。<br>即使现在通过VFL你可以用一些小把戏来处理中心视图，但是这也不保证在将来的版本中依然有效。<br><img src="http://cdn3.raywenderlich.com/wp-content/uploads/2015/08/constraints_constraining.png" alt="CONSTRAIN"></p>
+<p>####使用约束中的Multiplier<br>通过Multiplier，你可以通过比例来对视图进行布局，比如你可以让一个label的宽度是它父视图的60%。由于VFL会同时创建多个没有名字的约束，所以不能通过格式化串来设置百分比系数。</p>
+<blockquote>
+<p><strong> 注意：你可以通过</strong>constraintsWithVisualFormat<strong>返回的数组来遍历约束，但是你需要去确定它们的</strong>NSLayoutAttribute<strong>属性，这样才能正确的设定Multiplier，但即使是这样，你依然需要替换这些约束，因为约束的Multiplier是不可变的。</strong></p>
+</blockquote>
+<h3 id="u73B0_u5728_u8981_u5E72_u4EC0_u4E48_uFF1F"><a href="#u73B0_u5728_u8981_u5E72_u4EC0_u4E48_uFF1F" class="headerlink" title="现在要干什么？"></a>现在要干什么？</h3><p>你可以下载完整的<a href="http://cdn3.raywenderlich.com/wp-content/uploads/2015/09/Grapevine-Final.zip" target="_blank" rel="external">工程</a>。</p>
+<blockquote>
+<p><strong> 注意：如果你有多个工程使用相同的bundle id，Xcode可能会出现问题。所以如果你完成了这个教程并且想最后运行一下刚才下载的工程，你可以使用</strong>shift+option+command+K<strong>清空一下build目录。</strong></p>
+</blockquote>
+<p>现在你已经知道VFL如何工作啦，你已经可以在你的界面中使用这种布局咯。<br>你已经知道了如何使用layout options 来减少需要定义的约束。你也已经知道如何使用metrics来在runtime定义距离而不仅仅是编译期。最后，你也知道了VFL的一些限制，但是利大于弊，你应该好好的利用它。<br>如果你对该教程或者Auto Layout有什么问题或者建议的话，请留言！</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/">Auto Layout中的VFL使用教程（译）</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Max Wang 的个人博客">Max Wang</a></p>
+        <p><span>发布时间:</span>2015年12月11日 - 14时12分</p>
+        <p><span>最后更新:</span>2015年12月23日 - 22时01分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/" title="Auto Layout中的VFL使用教程（译）">http://mmmmmax.com/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://mmmmmax.com/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/　　作者: Max Wang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2015/12/23/QRCode-turtiol/">
+                    iOS二维码扫描识别
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#u51C6_u5907_u5F00_u59CB_u5427_uFF01"><span class="toc-number">1.</span> <span class="toc-text">准备开始吧！</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VFL_u8BED_u6CD5"><span class="toc-number">2.</span> <span class="toc-text">VFL语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u53EF_u4F7F_u7528_u7684_u7B26_u53F7"><span class="toc-number">3.</span> <span class="toc-text">可使用的符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u683C_u5F0F_u5316_u4E32_u5B9E_u4F8B"><span class="toc-number">4.</span> <span class="toc-text">格式化串实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u521B_u5EFA_u7EA6_u675F"><span class="toc-number">5.</span> <span class="toc-text">创建约束</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layout_Options"><span class="toc-number">6.</span> <span class="toc-text">Layout Options</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Metrics"><span class="toc-number">7.</span> <span class="toc-text">Metrics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layout_Guides"><span class="toc-number">8.</span> <span class="toc-text">Layout Guides</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u9650_u5236"><span class="toc-number">9.</span> <span class="toc-text">限制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#u89C6_u56FE_u4E2D_u5FC3"><span class="toc-number">9.1.</span> <span class="toc-text">视图中心</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u73B0_u5728_u8981_u5E72_u4EC0_u4E48_uFF1F"><span class="toc-number">10.</span> <span class="toc-text">现在要干什么？</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script>
+    var toc_button = document.getElementById("tocButton");
+    var toc_div = document.getElementById("toc");
+    toc_button.onclick=function() {
+        if (toc_div.style.display == "none") {
+            toc_div.style.display = "block";
+            toc_button.value = "隐藏目录";
+            document.getElementById("switch-btn").style.display = "none";
+            document.getElementById("switch-area").style.display = "none";
+        }
+        else {
+            toc_div.style.display = "none";
+            toc_button.value = "显示目录";
+            document.getElementById("switch-btn").style.display = "block";
+            document.getElementById("switch-area").style.display = "block";
+        }
+    }
+
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2015/12/23/QRCode-turtiol/" title="上一篇: iOS二维码扫描识别">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2015/12/28/《征服C指针》阅读笔记/">《征服C指针》阅读笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/23/QRCode-turtiol/">iOS二维码扫描识别</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/11/Auto-Layout-Visual-Format-Language-Tutorial/">Auto Layout中的VFL使用教程（译）</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200);
+            }
+            else {
+                $(".switch-btn, .switch-area").toggle(200);
+            }
+        })
+    </script>
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: false,
+            isPost: true,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2015 Max Wang
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        <div class="visit">
+            <span id="busuanzi_container_site_pv" style='display:none'>
+                <span id="site-visit" >本站到访数: 
+                    <span id="busuanzi_value_site_uv"></span>
+                </span>
+            </span>
+            <span id="busuanzi_container_page_pv" style='display:none'>
+                <span id="page-visit">, 本页阅读量: 
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+</footer>
+    </div>
+    
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
