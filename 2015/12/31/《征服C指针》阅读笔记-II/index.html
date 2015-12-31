@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>《征服C指针》阅读笔记 | One Punch Man</title>
+  <title>《征服C指针》阅读笔记 II | One Punch Man</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="缘由上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太">
+  <meta name="description" content="第三章 揭秘C的语法3.1 解读C的声明这张首先介绍的是如何读C中的声明，让你用英文的语法去理解声明，可能是岛国人民的英语比较烂，声明这里我感觉没那么多坑，容易晕的地方无非就是指针数组和数组指针，简而言之就是 * 和变量名如果有小括号返回的就是指针，否则就是数组。这个问题归根结底就是 * 的优先级高，就拿int *p[10]来说， * 的优先级很高，跟int结合后就决定了返回的是int *而读到最">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《征服C指针》阅读笔记">
-<meta property="og:url" content="http://mmmmmax.wang/2015/12/28/《征服C指针》阅读笔记/index.html">
+<meta property="og:title" content="《征服C指针》阅读笔记 II">
+<meta property="og:url" content="http://mmmmmax.wang/2015/12/31/《征服C指针》阅读笔记-II/index.html">
 <meta property="og:site_name" content="One Punch Man">
-<meta property="og:description" content="缘由上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太">
-<meta property="og:updated_time" content="2015-12-29T05:49:40.000Z">
+<meta property="og:description" content="第三章 揭秘C的语法3.1 解读C的声明这张首先介绍的是如何读C中的声明，让你用英文的语法去理解声明，可能是岛国人民的英语比较烂，声明这里我感觉没那么多坑，容易晕的地方无非就是指针数组和数组指针，简而言之就是 * 和变量名如果有小括号返回的就是指针，否则就是数组。这个问题归根结底就是 * 的优先级高，就拿int *p[10]来说， * 的优先级很高，跟int结合后就决定了返回的是int *而读到最">
+<meta property="og:updated_time" content="2015-12-31T08:11:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《征服C指针》阅读笔记">
-<meta name="twitter:description" content="缘由上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太">
+<meta name="twitter:title" content="《征服C指针》阅读笔记 II">
+<meta name="twitter:description" content="第三章 揭秘C的语法3.1 解读C的声明这张首先介绍的是如何读C中的声明，让你用英文的语法去理解声明，可能是岛国人民的英语比较烂，声明这里我感觉没那么多坑，容易晕的地方无非就是指针数组和数组指针，简而言之就是 * 和变量名如果有小括号返回的就是指针，否则就是数组。这个问题归根结底就是 * 的优先级高，就拿int *p[10]来说， * 的优先级很高，跟int结合后就决定了返回的是int *而读到最">
   
     <link rel="alternative" href="/atom.xml" title="One Punch Man" type="application/atom+xml">
   
@@ -168,11 +168,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-《征服C指针》阅读笔记" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-《征服C指针》阅读笔记-II" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/28/《征服C指针》阅读笔记/" class="article-date">
-      <time datetime="2015-12-28T06:42:11.000Z" itemprop="datePublished">2015-12-28</time>
+      <a href="/2015/12/31/《征服C指针》阅读笔记-II/" class="article-date">
+      <time datetime="2015-12-31T03:39:59.000Z" itemprop="datePublished">2015-12-31</time>
 </a>
     </div>
   
@@ -185,7 +185,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      《征服C指针》阅读笔记
+      《征服C指针》阅读笔记 II
     </h1>
   
 
@@ -206,33 +206,27 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="u7F18_u7531"><a href="#u7F18_u7531" class="headerlink" title="缘由"></a>缘由</h4><p>上个周末参加了SF的分享会，听了一位来自QQ浏览器的工程师关于iOS内存管理的分享。当初认为iOS上的内存管理不重要，也不会出多大的篓子，基本概念比如引用计数什么的明白原理就好。然而听分享的时候还是云里雾里大概只能听懂70%，回去之后反思了一下，大学时候的c学的就很烂，都是只是会用，如果想精进就必须要明白其中的原理，《征服C指针》这本书以前就听说过，很多同学推荐过，不过大概是大学期间确实玩心太重，不能耐下心来去看这种既不能提高绩点，又不能和当时实习挂钩的书（当年实习的大型机真是荒废了半年多的时光啊）。想那么多，不如现在就开始做，这篇读书笔记一是为了分享，也是为了督促自己。目测会有好几篇。那就开始吧！</p>
-<h3 id="u7B2C_u4E00_u7AE0__u4ECE_u57FA_u7840_u5F00_u59CB"><a href="#u7B2C_u4E00_u7AE0__u4ECE_u57FA_u7840_u5F00_u59CB" class="headerlink" title="第一章 从基础开始"></a>第一章 从基础开始</h3><h4 id="1-1__u4EC0_u4E48_u662FC"><a href="#1-1__u4EC0_u4E48_u662FC" class="headerlink" title="1.1 什么是C"></a>1.1 什么是C</h4><p>这一节主要介绍了c的由来，我以前一直以为<strong>sizeof</strong>只是一个函数，没想到竟然是关键字。太菜了，惭愧惭愧。</p>
-<h4 id="1-2__u5173_u4E8E_u6307_u9488"><a href="#1-2__u5173_u4E8E_u6307_u9488" class="headerlink" title="1.2 关于指针"></a>1.2 关于指针</h4><p>不得不说，即使是基础介绍的一章，也涨了姿势。<br>这里有指针<strong>a</strong></p>
+        <h3 id="u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5"><a href="#u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5" class="headerlink" title="第三章 揭秘C的语法"></a>第三章 揭秘C的语法</h3><h4 id="3-1__u89E3_u8BFBC_u7684_u58F0_u660E"><a href="#3-1__u89E3_u8BFBC_u7684_u58F0_u660E" class="headerlink" title="3.1 解读C的声明"></a>3.1 解读C的声明</h4><p>这张首先介绍的是如何读C中的声明，让你用英文的语法去理解声明，可能是岛国人民的英语比较烂，声明这里我感觉没那么多坑，容易晕的地方无非就是指针数组和数组指针，简而言之就是<strong> * </strong>和<strong>变量名</strong>如果有小括号返回的就是指针，否则就是数组。这个问题归根结底就是<strong> * </strong>的优先级高，就拿<strong>int *p[10]</strong>来说，<strong> * </strong>的优先级很高，跟int结合后就决定了返回的是<strong>int *</strong>而读到最后发现<strong>[]</strong>，自然而然就变成了<strong>返回int * 类型的数组</strong>，而如果<strong>int *</strong>加上小括号变成<strong>int (*p)[]</strong>，首先返回的会是<strong>int</strong>,看到<strong>[]</strong>就知道返回的是<strong>int数组</strong>,最后<strong>(*p)</strong>声明<strong>p</strong>是指针，最终返回的是数组指针，这里个人感觉不要揣测Dennis Ritchie的想法，记住就好，熟而生巧。</p>
+<h4 id="3-2_C_u7684_u6570_u636E_u7C7B_u578B_u7684_u6A21_u578B"><a href="#3-2_C_u7684_u6570_u636E_u7C7B_u578B_u7684_u6A21_u578B" class="headerlink" title="3.2 C的数据类型的模型"></a>3.2 C的数据类型的模型</h4><p>前半段介绍了一下数组指针的小细节。如下代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">int</span> *p = &amp;arr;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"size ------- \n arr - %d\n &amp;arr - %d\n p - %d\n"</span>,<span class="keyword">sizeof</span>(arr), <span class="keyword">sizeof</span>(&amp;arr), <span class="keyword">sizeof</span>(p));</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"point ------- \n arr - %p\n &amp;arr - %p\n p - %p\n"</span>,arr, &amp;arr, p);</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">size ------- </span><br><span class="line"> arr - <span class="number">40</span></span><br><span class="line"> &amp;arr - <span class="number">8</span></span><br><span class="line"> p - <span class="number">8</span></span><br><span class="line">point ------- </span><br><span class="line"> arr - <span class="number">0x7fff5fbff830</span></span><br><span class="line"> &amp;arr - <span class="number">0x7fff5fbff830</span></span><br><span class="line"> p - <span class="number">0x7fff5fbff830</span></span><br></pre></td></tr></table></figure>
+<p>可以看到最大的差别就是p和[arr]的sizeof不同，影响的地方就是两种类型的指针作自增操作的时候数值不同，两者的运用场景各有不同。这里差别来自于<strong>p</strong>是<strong>int *</strong>类型而arr是<strong>int [10]</strong>类型的，编译器会根据不同的类型做自增操作。</p>
+<p><strong>C中不存在多维数组，只不过是数组的数组</strong></p>
+<p>3.2.6介绍了函数指针，总结起来：</p>
 <ol>
-<li>如果<strong>a</strong>保存了其他变量的地址，可以说是<strong>a</strong>指向该地址。</li>
-<li><strong>*a</strong>等同于<strong>a</strong>指向的变量。</li>
+<li>从函数类型不能派生出除了指针类型之外的其他任何类型。（原因在于函数类型的大小是不定的，但是函数指针的大小是确定的）</li>
+<li>从数组类型是不能派生出函数类型的。</li>
 </ol>
-<p>疑问：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">void</span> *b = &amp;a;</span><br><span class="line">b++;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%p\n"</span>,&amp;a);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%lu\n"</span>,<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%p\n"</span>,(<span class="keyword">int</span> *)b);</span><br></pre></td></tr></table></figure>
-<p>我运行上面代码的时候地址加1并没有加4？why？<br>结论：因为我声明的无类型指针，系统不知道自加的时候要加多少。</p>
-<h4 id="1-3__u5173_u4E8E_u6570_u7EC4"><a href="#1-3__u5173_u4E8E_u6570_u7EC4" class="headerlink" title="1.3 关于数组"></a>1.3 关于数组</h4><ol>
-<li><strong>p[i]</strong>只是<strong>*(p + i)</strong>的简写。这个结论真是涨姿势了。<strong>[]</strong>只是一个语法糖而已。</li>
-<li>使用指针的效率并不会更高。</li>
-<li>对数组进行值传递的时候，将数组整体整理成结构体成员。</li>
+<p>3.2.10不完全类型，总结起来：<br>C有三种类型：</p>
+<ol>
+<li>对象类型（char、int、数组、指针、结构体）</li>
+<li>函数类型</li>
+<li>不完全类型，结构体标记的声明就是不完全类型(void 也为不完全类型)</li>
 </ol>
-<h3 id="u7B2C_u4E8C_u7AE0_C_u662F_u600E_u4E48_u4F7F_u7528_u5185_u5B58_u7684"><a href="#u7B2C_u4E8C_u7AE0_C_u662F_u600E_u4E48_u4F7F_u7528_u5185_u5B58_u7684" class="headerlink" title="第二章 C是怎么使用内存的"></a>第二章 C是怎么使用内存的</h3><h4 id="2-1__u865A_u62DF_u5730_u5740"><a href="#2-1__u865A_u62DF_u5730_u5740" class="headerlink" title="2.1 虚拟地址"></a>2.1 虚拟地址</h4><p>要点：程序面对的都是虚拟地址空间（这些结论已经有一定了解了）</p>
-<h4 id="2-2__u5185_u5B58_u7684_u4F7F_u7528_u65B9_u6CD5"><a href="#2-2__u5185_u5B58_u7684_u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="2.2 内存的使用方法"></a>2.2 内存的使用方法</h4><ol>
-<li>全局变量：定义在函数外面的变量都为全局变量</li>
-<li><strong>static</strong>：除去声明为静态变量外，全局变量加上<strong>static</strong> 后限定作用域在源代码文件中。</li>
-<li>局部变量声明在函数中。<br> </li>
-</ol>
-<h4 id="2-3__u51FD_u6570_u548C_u5B57_u7B26_u4E32_u5E38_u91CF"><a href="#2-3__u51FD_u6570_u548C_u5B57_u7B26_u4E32_u5E38_u91CF" class="headerlink" title="2.3 函数和字符串常量"></a>2.3 函数和字符串常量</h4><p>函数和字符串常量分配在内存相邻的地址上。另外讲解了函数指针，因为之前就习惯用函数指针了，这里相对好理解。</p>
-<h4 id="2-4__u9759_u6001_u53D8_u91CF"><a href="#2-4__u9759_u6001_u53D8_u91CF" class="headerlink" title="2.4 静态变量"></a>2.4 静态变量</h4><p>讲解了下各种变量编译之后的样子。跟着demo运行了一下，算是对.o文件更加理解了些。</p>
-<h4 id="2-5__u81EA_u52A8_u53D8_u91CF_uFF08_u6808_uFF09"><a href="#2-5__u81EA_u52A8_u53D8_u91CF_uFF08_u6808_uFF09" class="headerlink" title="2.5 自动变量（栈）"></a>2.5 自动变量（栈）</h4><p>描述了调用函数时内存的改变，调用时将函数和形参入栈，函数返回时出栈。<br>然后介绍了<strong>可变长参数函数</strong>和断言<strong>assert()</strong>。<br>递归：介绍了下什么情况下用递归，举了快排的例子。</p>
-<h4 id="2-6_malloc_28_29"><a href="#2-6_malloc_28_29" class="headerlink" title="2.6 malloc()"></a>2.6 malloc()</h4><p>结构体动态分配内存。<br>malloc()不是<strong>系统调用</strong>。这里不太理解。</p>
-<h4 id="2-7__u5185_u5B58_u5E03_u5C40_u5BF9_u9F50"><a href="#2-7__u5185_u5B58_u5E03_u5C40_u5BF9_u9F50" class="headerlink" title="2.7 内存布局对齐"></a>2.7 内存布局对齐</h4><p>没啥好说的，本来也知道。但是让布局对齐的优点在哪里？需要调研。</p>
-<h3 id="u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5"><a href="#u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5" class="headerlink" title="第三章 揭秘C的语法"></a>第三章 揭秘C的语法</h3><p>待续~<br>                                                                                                                                                                                                                                                                                                                                         </p>
+<p>例子：typedef struct Woman_tag Woman;声明的时候并不知道Woman的大小。<br><strong>结构体中不能存在不完全类型，但是可以存在不完全类型的指针</strong></p>
+<h4 id="3-3_u8868_u8FBE_u5F0F"><a href="#3-3_u8868_u8FBE_u5F0F" class="headerlink" title="3.3表达式"></a>3.3表达式</h4><p>略</p>
+<h4 id="3-4_u89E3_u8BFBC_u7684_u58F0_u660E"><a href="#3-4_u89E3_u8BFBC_u7684_u58F0_u660E" class="headerlink" title="3.4解读C的声明"></a>3.4解读C的声明</h4><p>3.4.1介绍了<strong>const</strong>修饰符，总结：<br>跟以前的认识一样，<strong>const</strong>修饰它右面整体的类型</p>
+<p>3.5介绍了C声明函数的参数不可以有数组，只能传递数组指针，并且重要的是<strong>int a[]</strong>和<strong>int *a</strong>等价，但是个人推荐前一种方式，因为前一种更加直观。然后作者倾向于后一种，不解。</p>
 
       
     </div>
@@ -241,13 +235,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2015/12/28/《征服C指针》阅读笔记/">《征服C指针》阅读笔记</a></p>
+        <p><span>本文标题:</span><a href="/2015/12/31/《征服C指针》阅读笔记-II/">《征服C指针》阅读笔记 II</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Max Wang 的个人博客">Max Wang</a></p>
-        <p><span>发布时间:</span>2015年12月28日 - 14时42分</p>
-        <p><span>最后更新:</span>2015年12月29日 - 13时49分</p>
+        <p><span>发布时间:</span>2015年12月31日 - 11时39分</p>
+        <p><span>最后更新:</span>2015年12月31日 - 16时11分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2015/12/28/《征服C指针》阅读笔记/" title="《征服C指针》阅读笔记">http://mmmmmax.wang/2015/12/28/《征服C指针》阅读笔记/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://mmmmmax.wang/2015/12/28/《征服C指针》阅读笔记/　　作者: Max Wang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2015/12/31/《征服C指针》阅读笔记-II/" title="《征服C指针》阅读笔记 II">http://mmmmmax.wang/2015/12/31/《征服C指针》阅读笔记-II/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://mmmmmax.wang/2015/12/31/《征服C指针》阅读笔记-II/　　作者: Max Wang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -260,16 +254,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2015/12/31/《征服C指针》阅读笔记-II/">
-                    《征服C指针》阅读笔记 II
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/12/23/QRCode-turtiol/">
-                    iOS二维码扫描识别
+                <a href="/2015/12/28/《征服C指针》阅读笔记/">
+                    《征服C指针》阅读笔记
                 </a>
             </div>
         
@@ -280,7 +268,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#u7F18_u7531"><span class="toc-number">1.</span> <span class="toc-text">缘由</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7B2C_u4E00_u7AE0__u4ECE_u57FA_u7840_u5F00_u59CB"><span class="toc-number"></span> <span class="toc-text">第一章 从基础开始</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1__u4EC0_u4E48_u662FC"><span class="toc-number">1.</span> <span class="toc-text">1.1 什么是C</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2__u5173_u4E8E_u6307_u9488"><span class="toc-number">2.</span> <span class="toc-text">1.2 关于指针</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3__u5173_u4E8E_u6570_u7EC4"><span class="toc-number">3.</span> <span class="toc-text">1.3 关于数组</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7B2C_u4E8C_u7AE0_C_u662F_u600E_u4E48_u4F7F_u7528_u5185_u5B58_u7684"><span class="toc-number"></span> <span class="toc-text">第二章 C是怎么使用内存的</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1__u865A_u62DF_u5730_u5740"><span class="toc-number">1.</span> <span class="toc-text">2.1 虚拟地址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2__u5185_u5B58_u7684_u4F7F_u7528_u65B9_u6CD5"><span class="toc-number">2.</span> <span class="toc-text">2.2 内存的使用方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3__u51FD_u6570_u548C_u5B57_u7B26_u4E32_u5E38_u91CF"><span class="toc-number">3.</span> <span class="toc-text">2.3 函数和字符串常量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4__u9759_u6001_u53D8_u91CF"><span class="toc-number">4.</span> <span class="toc-text">2.4 静态变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5__u81EA_u52A8_u53D8_u91CF_uFF08_u6808_uFF09"><span class="toc-number">5.</span> <span class="toc-text">2.5 自动变量（栈）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6_malloc_28_29"><span class="toc-number">6.</span> <span class="toc-text">2.6 malloc()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-7__u5185_u5B58_u5E03_u5C40_u5BF9_u9F50"><span class="toc-number">7.</span> <span class="toc-text">2.7 内存布局对齐</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5"><span class="toc-number"></span> <span class="toc-text">第三章 揭秘C的语法</span></a>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5"><span class="toc-number">1.</span> <span class="toc-text">第三章 揭秘C的语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1__u89E3_u8BFBC_u7684_u58F0_u660E"><span class="toc-number">1.1.</span> <span class="toc-text">3.1 解读C的声明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2_C_u7684_u6570_u636E_u7C7B_u578B_u7684_u6A21_u578B"><span class="toc-number">1.2.</span> <span class="toc-text">3.2 C的数据类型的模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3_u8868_u8FBE_u5F0F"><span class="toc-number">1.3.</span> <span class="toc-text">3.3表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4_u89E3_u8BFBC_u7684_u58F0_u660E"><span class="toc-number">1.4.</span> <span class="toc-text">3.4解读C的声明</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -342,7 +330,7 @@
 
     <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2015/12/28/《征服C指针》阅读笔记/" data-title="《征服C指针》阅读笔记" data-url="http://mmmmmax.wang/2015/12/28/《征服C指针》阅读笔记/"></div>
+    <div class="ds-thread" data-thread-key="2015/12/31/《征服C指针》阅读笔记-II/" data-title="《征服C指针》阅读笔记 II" data-url="http://mmmmmax.wang/2015/12/31/《征服C指针》阅读笔记-II/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -367,15 +355,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2015/12/31/《征服C指针》阅读笔记-II/" title="上一篇: 《征服C指针》阅读笔记 II">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2015/12/23/QRCode-turtiol/" title="下一篇: iOS二维码扫描识别">
+            <a href="/2015/12/28/《征服C指针》阅读笔记/" title="下一篇: 《征服C指针》阅读笔记">
                 <i class="fa fa-angle-right"></i>
             </a>
         

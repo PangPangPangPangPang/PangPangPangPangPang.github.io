@@ -112,7 +112,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/C语言/" style="font-size: 10px;">C语言</a> <a href="/tags/VFL/" style="font-size: 10px;">VFL</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/qrcode/" style="font-size: 10px;">qrcode</a> <a href="/tags/指针/" style="font-size: 10px;">指针</a> <a href="/tags/翻译/" style="font-size: 10px;">翻译</a>
+                        <a href="/tags/AutoLayout/" style="font-size: 10px;">AutoLayout</a> <a href="/tags/C语言/" style="font-size: 20px;">C语言</a> <a href="/tags/VFL/" style="font-size: 10px;">VFL</a> <a href="/tags/iOS/" style="font-size: 20px;">iOS</a> <a href="/tags/qrcode/" style="font-size: 10px;">qrcode</a> <a href="/tags/指针/" style="font-size: 20px;">指针</a> <a href="/tags/翻译/" style="font-size: 10px;">翻译</a>
                     </div>
                 </section>
                 
@@ -171,6 +171,102 @@
     </div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-《征服C指针》阅读笔记-II" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/31/《征服C指针》阅读笔记-II/" class="article-date">
+      <time datetime="2015-12-31T03:39:59.000Z" itemprop="datePublished">2015-12-31</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/31/《征服C指针》阅读笔记-II/">《征服C指针》阅读笔记 II</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5"><a href="#u7B2C_u4E09_u7AE0__u63ED_u79D8C_u7684_u8BED_u6CD5" class="headerlink" title="第三章 揭秘C的语法"></a>第三章 揭秘C的语法</h3><h4 id="3-1__u89E3_u8BFBC_u7684_u58F0_u660E"><a href="#3-1__u89E3_u8BFBC_u7684_u58F0_u660E" class="headerlink" title="3.1 解读C的声明"></a>3.1 解读C的声明</h4><p>这张首先介绍的是如何读C中的声明，让你用英文的语法去理解声明，可能是岛国人民的英语比较烂，声明这里我感觉没那么多坑，容易晕的地方无非就是指针数组和数组指针，简而言之就是<strong> * </strong>和<strong>变量名</strong>如果有小括号返回的就是指针，否则就是数组。这个问题归根结底就是<strong> * </strong>的优先级高，就拿<strong>int *p[10]</strong>来说，<strong> * </strong>的优先级很高，跟int结合后就决定了返回的是<strong>int *</strong>而读到最后发现<strong>[]</strong>，自然而然就变成了<strong>返回int * 类型的数组</strong>，而如果<strong>int *</strong>加上小括号变成<strong>int (*p)[]</strong>，首先返回的会是<strong>int</strong>,看到<strong>[]</strong>就知道返回的是<strong>int数组</strong>,最后<strong>(*p)</strong>声明<strong>p</strong>是指针，最终返回的是数组指针，这里个人感觉不要揣测Dennis Ritchie的想法，记住就好，熟而生巧。</p>
+<h4 id="3-2_C_u7684_u6570_u636E_u7C7B_u578B_u7684_u6A21_u578B"><a href="#3-2_C_u7684_u6570_u636E_u7C7B_u578B_u7684_u6A21_u578B" class="headerlink" title="3.2 C的数据类型的模型"></a>3.2 C的数据类型的模型</h4><p>前半段介绍了一下数组指针的小细节。如下代码：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">int</span> *p = &amp;arr;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"size ------- \n arr - %d\n &amp;arr - %d\n p - %d\n"</span>,<span class="keyword">sizeof</span>(arr), <span class="keyword">sizeof</span>(&amp;arr), <span class="keyword">sizeof</span>(p));</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"point ------- \n arr - %p\n &amp;arr - %p\n p - %p\n"</span>,arr, &amp;arr, p);</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">size ------- </span><br><span class="line"> arr - <span class="number">40</span></span><br><span class="line"> &amp;arr - <span class="number">8</span></span><br><span class="line"> p - <span class="number">8</span></span><br><span class="line">point ------- </span><br><span class="line"> arr - <span class="number">0x7fff5fbff830</span></span><br><span class="line"> &amp;arr - <span class="number">0x7fff5fbff830</span></span><br><span class="line"> p - <span class="number">0x7fff5fbff830</span></span><br></pre></td></tr></table></figure>
+<p>可以看到最大的差别就是p和[arr]的sizeof不同，影响的地方就是两种类型的指针作自增操作的时候数值不同，两者的运用场景各有不同。这里差别来自于<strong>p</strong>是<strong>int *</strong>类型而arr是<strong>int [10]</strong>类型的，编译器会根据不同的类型做自增操作。</p>
+<p><strong>C中不存在多维数组，只不过是数组的数组</strong></p>
+<p>3.2.6介绍了函数指针，总结起来：</p>
+<ol>
+<li>从函数类型不能派生出除了指针类型之外的其他任何类型。（原因在于函数类型的大小是不定的，但是函数指针的大小是确定的）</li>
+<li>从数组类型是不能派生出函数类型的。</li>
+</ol>
+<p>3.2.10不完全类型，总结起来：<br>C有三种类型：</p>
+<ol>
+<li>对象类型（char、int、数组、指针、结构体）</li>
+<li>函数类型</li>
+<li>不完全类型，结构体标记的声明就是不完全类型(void 也为不完全类型)</li>
+</ol>
+<p>例子：typedef struct Woman_tag Woman;声明的时候并不知道Woman的大小。<br><strong>结构体中不能存在不完全类型，但是可以存在不完全类型的指针</strong></p>
+<h4 id="3-3_u8868_u8FBE_u5F0F"><a href="#3-3_u8868_u8FBE_u5F0F" class="headerlink" title="3.3表达式"></a>3.3表达式</h4><p>略</p>
+<h4 id="3-4_u89E3_u8BFBC_u7684_u58F0_u660E"><a href="#3-4_u89E3_u8BFBC_u7684_u58F0_u660E" class="headerlink" title="3.4解读C的声明"></a>3.4解读C的声明</h4><p>3.4.1介绍了<strong>const</strong>修饰符，总结：<br>跟以前的认识一样，<strong>const</strong>修饰它右面整体的类型</p>
+<p>3.5介绍了C声明函数的参数不可以有数组，只能传递数组指针，并且重要的是<strong>int a[]</strong>和<strong>int *a</strong>等价，但是个人推荐前一种方式，因为前一种更加直观。然后作者倾向于后一种，不解。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C语言/">C语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/指针/">指针</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
   
     <article id="post-《征服C指针》阅读笔记" class="article article-type-post" itemscope itemprop="blogPost">
   
