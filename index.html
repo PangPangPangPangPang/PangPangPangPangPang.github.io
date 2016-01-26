@@ -172,6 +172,128 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-FMDB-note-I" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/22/FMDB-note-I/" class="article-date">
+      <time datetime="2016-01-22T09:30:23.000Z" itemprop="datePublished">2016-01-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/22/FMDB-note-I/">FMDB阅读笔记（一）</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="FMDatabaseQueue"><a href="#FMDatabaseQueue" class="headerlink" title="FMDatabaseQueue"></a>FMDatabaseQueue</h3><p>该类提供了多线程操作数据库的功能。尽量不要在多线程操作同一个<strong>FMDatabase</strong>实例。取而代之的是在每一个<strong>FMDatabaseQueue</strong>创建一个<strong>FMDatabase</strong>实例。下面来详细看代码吧。</p>
+<p>``objective-c</p>
+<ul>
+<li><p>(instancetype)initWithPath:(NSString*)aPath flags:(int)openFlags {</p>
+<p>  self = [super init];</p>
+<p>  if (self != nil) {</p>
+<pre><code>_db = [[[self class] databaseClass] databaseWithPath:aPath];
+FMDBRetain(_db);
+</code></pre></li>
+</ul>
+<p>#if SQLITE_VERSION_NUMBER &gt;= 3005000<br>        BOOL success = [_db openWithFlags:openFlags];</p>
+<p>#else<br>        BOOL success = [_db open];</p>
+<p>#endif<br>        if (!success) {<br>            NSLog(@”Could not create database queue for path %@”, aPath);<br>            FMDBRelease(self);<br>            return 0x00;<br>        }</p>
+<pre><code>    _path = FMDBReturnRetained(aPath);
+
+    _queue = dispatch_queue_create([[NSString stringWithFormat:@&quot;fmdb.%@&quot;, self] UTF8String], NULL);
+    dispatch_queue_set_specific(_queue, kDispatchQueueSpecificKey, (__bridge void *)self, NULL);
+    _openFlags = openFlags;
+}
+
+return self;
+</code></pre><p>}<br>``<br>初始化方法，创建database实例，然后创建了一个串行队列，并用<strong>dispatch_queue_set_specific</strong>方法跟<strong>FMDatabaseQueue</strong>创建关联。<strong>openWithFlags:openFlags</strong>为开启文件的选项。默认<strong>open</strong>方法的选项为<strong>SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE</strong>。</p>
+<p>``objective-c</p>
+<ul>
+<li><p>(void)inDatabase:(void (^)(FMDatabase <em>db))block {<br>  /</em> Get the currently executing queue (which should probably be nil, but in theory could be another DB queue</p>
+<ul>
+<li><p>and then check it against self to make sure we’re not about to deadlock. <em>/<br>FMDatabaseQueue </em>currentSyncQueue = (__bridge id)dispatch_get_specific(kDispatchQueueSpecificKey);<br>assert(currentSyncQueue != self &amp;&amp; “inDatabase: was called reentrantly on the same queue, which would lead to a deadlock”);</p>
+<p>FMDBRetain(self);</p>
+<p>dispatch_sync(_queue, ^() {</p>
+<p> FMDatabase *db = [self database];<br> block(db);</p>
+<p> if ([db hasOpenResultSets]) {</p>
+<pre><code>NSLog(@&quot;Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]&quot;);
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<p>#if defined(DEBUG) &amp;&amp; DEBUG<br>            NSSet <em>openSetCopy = FMDBReturnAutoreleased([[db valueForKey:@”_openResultSets”] copy]);<br>            for (NSValue </em>rsInWrappedInATastyValueMeal in openSetCopy) {<br>                FMResultSet <em>rs = (FMResultSet </em>)[rsInWrappedInATastyValueMeal pointerValue];<br>                NSLog(@”query: ‘%@’”, [rs query]);<br>            }</p>
+<p>#endif<br>        }<br>    });</p>
+<pre><code>FMDBRelease(self);
+</code></pre><p>}<br>``<br>利用<strong>dispatch_get_specific</strong>获得<strong>FMDatabaseQueue</strong>关联的线程，如果是同一个线程，则直接断言，因为同线程执行<strong>dispatch_sync</strong>会造成死锁。这里的<strong>FMDBRetain(self)</strong>和<strong>FMDBRelease(self)</strong>应该是为了防止block内提前将self释放造成后续访问野指针。接下来在关联线程中获取database并执行block，这里如果在database中存在多个查询结果则防处警告，debug模式下会打印出这些查询结果的query。这里的copy操作不理解。</p>
+<p>``objective-c</p>
+<ul>
+<li>(void)inTransaction:(void (^)(FMDatabase <em>db, BOOL </em>rollback))block;</li>
+<li>(void)inDeferredTransaction:(void (^)(FMDatabase <em>db, BOOL </em>rollback))block;<br>``<br>这两个方法的内部逻辑很简单，判断事务开启<strong>defer transaction</strong> 或者<strong>exclusive transaction</strong>，关闭时根据业务逻辑<strong>rollback</strong>或者<strong>commit</strong>。这个类很简单，就分析到这里。</li>
+</ul>
+<h3 id="FMDatabasePool"><a href="#FMDatabasePool" class="headerlink" title="FMDatabasePool"></a>FMDatabasePool</h3><p>一开篇就强调不到万不得已不要用这个类，如果你只是用来读数据库，可以用这个类，否则可能造成死锁。</p>
+<p>``objective-c</p>
+<ul>
+<li>(void)executeLocked:(void (^)(void))aBlock {<br>  dispatch_sync(_lockQueue, aBlock);<br>}<br>``<br>该类通过上述方法保证池子操作的线程安全（毕竟已经同步单线程跑了），但是该类并不能保证池内数据库操作安全，该死锁还是会死锁，同时读写会引发很大的问题。这个类没有什么太多值得说的地方，如果有大量并发读操作的需求的话推荐使用这个类，其他都不推荐。</li>
+</ul>
+<h3 id="FMResultSet"><a href="#FMResultSet" class="headerlink" title="FMResultSet"></a>FMResultSet</h3><p>query结果的类。通过<strong>FMStatement</strong>访问结果。这个类主要的功能算是提供了一套友好的OC接口来访问结果。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
+  
     <article id="post-《征服C指针》阅读笔记-II" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -730,7 +852,7 @@
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2015 Max Wang
+                &copy; 2016 Max Wang
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的静态博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减双栏 Hexo 博客主题">Yelee</a> by MOxFIVE
